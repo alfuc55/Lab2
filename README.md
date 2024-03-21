@@ -211,3 +211,4 @@ Para hacer la trayectoria cuadrada se uso el mismo principio que en el nodo ante
                     rospy.sleep(4)
                     pub.publish(move)
 
+![TSquareurtlesim](https://github.com/alfuc55/Lab2/blob/main/Square.png)   
