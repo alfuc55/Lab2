@@ -63,9 +63,11 @@ Al igual que otros nodos en ROS, Turtlesim se comunica utilizando el sistema de 
 
 ## Turtlesim 
 Para ejecutar el simulador turtlesim primero se debe correr ROS con el comando $ rosrun, luego en una nueva terminal usar el comando que abre el simulador: 
-$ rosrun turtlesim turtlesim_node
+$ rosrun turtlesim turtlesim_node$
 
 ![Turtlesim](https://github.com/alfuc55/Lab2/blob/main/turtlesimnode.png)
+
+### Turtlesim Keyboard Teleop
 
 La tortuga se comanda mediante el topico /cmd_vel, este comando es un tópico comúnmente utilizado para enviar comandos de velocidad a un robot móvil. Este tópico es fundamental en el control de movimiento de los robots y es utilizado por muchos controladores de movimiento para recibir instrucciones sobre cómo moverse. Los mensajes enviados a /cmd_vel son del tipo geometry_msgs/Twist. Este tipo de mensaje contiene dos campos: linear y angular, que representan las velocidades lineal y angular del robot respectivamente.
 Tomando esto en cuenta se programo el siguiente nodo de ROS usando Python para leer las teclas pulsadas por el usuario y mandar los mensajes adecuados y que turtlesim pueda escucharlos y asi poder mover la tortuga. 
@@ -142,4 +144,70 @@ Tomando esto en cuenta se programo el siguiente nodo de ROS usando Python para l
 
  ![TeleopTurtlesim](https://github.com/alfuc55/Lab2/blob/main/Teleop.png)   
 
+### Trajectoria cuadrado y triangulo
+Para completar la segunda tarea del nivel básico correspondiente a la programación de trayectorias usamos los mismos mensajes y tópicos usados en el código anterior, solo que esta vez los movimientos son fijos por un periodo de tiempo. 
+        # declaracion de librerias 
+        #!/usr/bin/env python
+        import rospy
+        from geometry_msgs.msg import Twist
+        from std_msgs.msg import String
+        from geometry_msgs.msg import Twist
+        from turtlesim.srv import TeleportAbsolute, TeleportRelative
+        from turtlesim.msg import Pose
+        # funcion que crea el movimiento 
+        def move_triangular():
+            # Crear un objeto Twist para enviar comandos de movimiento
+            move.linear.x = 4  # Velocidad lineal en el eje x
+            # Definir la velocidad angular
+            move.angular.z = 0.0  # No hay rotación inicialmente
+            # crar un ciclo que ejecuta los 3 movimientos para el triangulo
+            for n in range(3):
+                    #Definir la velocidad angular para le movimiento lineal
+                    move.angular.z = 0.0 
+                    rospy.sleep(4)  # Tiempo para avanzar un lado
+                    pub.publish(move) # publicar mensaje
+                    #girar
+                    move.linear.x = 0
+                    move.angular.z = 2.2
+                    rospy.sleep(3.5) # esperar 
+                    pub.publish(move) # publicar mensaje 
+                    move.linear.x = 4.4
+                    
+        if __name__ == '__main__':
+            # Inicializar el nodo de ROS
+            rospy.init_node('move_Triangular', anonymous=False)
+            # Suscribirse al topic de la posición de la tortuga
+            posicion = rospy.Subscriber('/turtle1/pose', Pose, queue_size=10)
+                
+            # Crear un publicador para enviar comandos de movimiento a TurtleSim
+            pub = rospy.Publisher('/turtle1/cmd_vel', Twist, queue_size=10)
+            pub.rate = rospy.Rate(10)
+            move = Twist()
+            try:
+                # usar funcion que manda una trayectoria triangular 
+                move_triangular()
+            except rospy.ROSInterruptException:
+                pass
+
+![Triangularurtlesim](https://github.com/alfuc55/Lab2/blob/main/Triangular.png)   
+
+Para hacer la trayectoria cuadrada se uso el mismo principio que en el nodo anterior solo que esta vez el numero de movimientos determinado por el ciclo for se aumento a 4. Este nuevo movimiento solo se definio en una nueva funcion:
+
+        def move_square():
+        
+            # Crear un objeto Twist para enviar comandos de movimiento
+            move.linear.x = 5  # Velocidad lineal en el eje x
+            # Definir la velocidad angular
+            move.angular.z = 0.0  # No hay rotación inicialmente
+            # Definir 4 moviemientos
+            for n in range(4):
+                    move.linear.x = 4
+                    move.angular.z = 0.0 
+                    rospy.sleep(4)  # Tiempo para avanzar un lado
+                    pub.publish(move)
+                    
+                    move.linear.x = 0
+                    move.angular.z = 1.55
+                    rospy.sleep(4)
+                    pub.publish(move)
 
