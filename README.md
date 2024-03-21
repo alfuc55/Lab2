@@ -35,7 +35,7 @@ El controlador Proporcional-Integral (PI), es un controlador que mezcla el contr
 
 Por último, el controlador Proporiconal-Integral-Derivado, es la mezcla del controlador PI sumándole un controlador derivado (D), la adición de este útlimo permite aumentar la respuesta del controlador porque predice perturbaciones al sistema midiendo el cambio en el error. Este controlador correlaciona la salida del controlador con el error, la integral del error y la derivada del error, si bien es el que mejor funciona de los 3, también es el más caro y complciado de diseñar.
 
-## Nivel Basico 
+# Nivel Basico 
 Para esta primera parte de la practica denominada como Nivel Básico, se creará un workspace y se agregara un paquete llamado Practicas_Lab, donde se almacenarán los codigos usados para esta clase. Tambien se explorarán y usarán más el concepto de nodos para entender mejor su funcionamiento  
 
 Para completar el nivel básico de la practica, se requiere crear un paquetes denominado "practicas_lab" de ros con las dependencias rospy, roscpp y std_msgs. 
@@ -53,4 +53,93 @@ Con la dirección URL obtenida, se deben de clonar los archivos de Python en nue
 git clone https://github.com/cesar-martinez-torres/Formatos_LRT4102/tree/main/Codigos_clase/Lab2/Basic
 
 Con los archivos copiados dentro de nuestra carptea, es necesario compilar el paquete, una vez compilado se abre el Visual Code Studio para ejecutar los archivos de Python, cuandos se ejecuten, el archivo talker.pt comenzará a emitir un mensaje, el cual se podrá ver desde el programa listener.py
-![Talker](https://github.com/alfuc55/Lab2/blob/main/listener.png)
+![Listener](https://github.com/alfuc55/Lab2/blob/main/listener.png)
+![Talker](https://github.com/alfuc55/Lab2/blob/main/Talker.png)
+
+# Nivel Intermedio
+La segunda parte de la practica es el nivel intermedio, las tareas a realizar consisten en la creación de un nodo que sea capaz de comandar al nodo de la tortuga Turtlesim incluida en ROS, y después programar un nodo que envie una trayectoria triangular y cuadrada a la tortuga. 
+Para este nivel intermedio se usará el nodo turtlesim, Turtlesim es un paquete de ROS que proporciona una simple simulación gráfica de una tortuga robótica en un espacio bidimensional 
+Al igual que otros nodos en ROS, Turtlesim se comunica utilizando el sistema de publicación y suscripción de tópicos
+
+## Turtlesim 
+Para ejecutar el simulador turtlesim primero se debe correr ROS con el comando $ rosrun, luego en una nueva terminal usar el comando que abre el simulador: 
+$ rosrun turtlesim turtlesim_node
+
+![Turtlesim](https://github.com/alfuc55/Lab2/blob/main/turtlesimnode.png)
+
+La tortuga se comanda mediante el topico /cmd_vel, este comando es un tópico comúnmente utilizado para enviar comandos de velocidad a un robot móvil. Este tópico es fundamental en el control de movimiento de los robots y es utilizado por muchos controladores de movimiento para recibir instrucciones sobre cómo moverse. Los mensajes enviados a /cmd_vel son del tipo geometry_msgs/Twist. Este tipo de mensaje contiene dos campos: linear y angular, que representan las velocidades lineal y angular del robot respectivamente.
+Tomando esto en cuenta se programo el siguiente nodo de ROS usando Python para leer las teclas pulsadas por el usuario y mandar los mensajes adecuados y que turtlesim pueda escucharlos y asi poder mover la tortuga. 
+
+        ## declaracion de librerias
+        #!/usr/bin/env python
+        # license removed for brevity
+        import rospy # libreria de ROS
+        from std_msgs.msg import String  # libreria de los mensajes 
+        from geometry_msgs.msg import Twist # libreria mensajes tio Twist
+        from turtlesim.srv import TeleportAbsolute, TeleportRelative
+        from pynput import keyboard as kb # libreria para leer la teclas presionadas 
+        import termios, sys, os
+        import tty
+        import select
+
+        # funcion para obtener las teclas presionadas
+        def getKey():
+            tty.setraw(sys.stdin.fileno())
+            select.select([sys.stdin], [], [], 0)
+            key = sys.stdin.read(1)
+            termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+            return key
+        # funcion para definir el valor del mensaje Twist a enviar dependiendo las teclas pulsadas
+        def movimiento(tecla):
+            print('Se ha pulsado la tecla ' + str(tecla))
+            twist.angular.z= 0
+            twist.linear.x = 0
+            # adelante 
+            if tecla == "w":
+                twist.linear.x= 1
+            # atras
+            elif tecla == "s":
+                twist.linear.x =-1
+            # Izquierda
+            elif tecla == "a":
+                twist.angular.z= 1
+            # derecha
+            elif tecla == "d":
+                twist.angular.z= -1
+            # salir del programa 
+            elif tecla == "r":
+                twist.angular.z= 0
+                twist.linear.x = 0
+        # funcion que manda a traer las funciones para leer las teclas y deifinir el tipo de mivimiento
+        def talker():
+            while(1):
+                    # Asigna a key los valores del vector de la tecla presionada
+                    key = getKey()
+                    if key=="r":
+                        break 
+                    # Obtiene los valores de x, y, z 
+                    movimiento(key)   
+                    # se publica el mensaje  
+                    pub.publish(twist)
+
+        if __name__ == '__main__':
+            # se configura el nodo de ROS
+            settings = termios.tcgetattr(sys.stdin)
+            # PUBLISHER EN turtle/cmd_vel UTILIZANDO LOS VALORES DE TWIST
+            pub = rospy.Publisher('turtle1/cmd_vel', Twist, queue_size=10)
+            # INICIALIZA EL NODO: teleop_twist_keyboard
+            rospy.init_node('teleoper', anonymous= False)
+            pub.rate = rospy.Rate(10)
+            twist = Twist()
+
+            try:
+                # se manda a traer la funcion para obtener la tecla pulsada 
+                key = getKey()
+                # se usa la funcion que envia el mensaje 
+                talker()
+            except rospy.ROSInterruptException:
+                pass
+
+ ![TeleopTurtlesim](https://github.com/alfuc55/Lab2/blob/main/Teleop.png)   
+
+
