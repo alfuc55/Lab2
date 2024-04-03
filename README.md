@@ -466,3 +466,25 @@ Para obtener las coordenadas deseadas para la tortuga se usa una entrada del usu
                     print("Ingrese la posición deseada de rotacion:")
                     pt = float(input("angulo theta: "))*(math.pi/180)
                     return pt
+
+Ahora solo queda definir la función que hace que la tortuga se mueva y mandar a llamar a las funciones previamente declaradas 
+
+              def move_turtle_interactively(self):
+        while not rospy.is_shutdown():
+            # Obtener la posición deseada del usuario
+            desired_x = self.get_desired_x_from_user()
+            desired_y = self.get_desired_y_from_user()
+            desired_t = self.get_desired_t_from_user()
+            # Mover la tortuga a la posición deseada
+            self.move_turtle_to_desired_x(desired_x,desired_y)
+            self.move_turtle_to_desired_y(desired_y,desired_x)
+            self.move_turtle_to_desired_t(desired_t)
+
+        if __name__ == '__main__':
+            try:
+                move_turtle_pid = MoveTurtlePIDControl()
+                move_turtle_pid.move_turtle_interactively()
+            except rospy.ROSInterruptException:
+                pass
+
+                
