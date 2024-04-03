@@ -326,6 +326,7 @@ Lo mismo para la función que determina la posición actual de la tortuga
 
 
 Para el cálculo de las velocidades lineales, se usarán dos funciones, una función es el controlador para establecer la velocidad lineal en X y la otra función para establecer la velocidad lineal en Y. A pesar de que los controladores van separados, necesitamos en ambos las coordenadas deseadas para X y para Y debido a que se requiere hacer una transformación espacial para cambiar la referencia de las coordenadas al eje de referencia de la tortuga. 
+Tambien a diferencia del controlador anterior, ahora se declaran 3 constantes KP, KI y KD, cada una correspondiente a los valores de las ganancias proporcial, intergral y derivativa. 
 
                  def move_turtle_to_desired_x(self, desired_x, desired_y):
         # Constantes de proporcionalidad, integral y derivativa del controlador (ajustables)
@@ -487,4 +488,8 @@ Ahora solo queda definir la función que hace que la tortuga se mueva y mandar a
             except rospy.ROSInterruptException:
                 pass
 
-                
+Con el objetivo de probar la funcionalidad del controlador, se realizo de nuevo la trayectoria cuadrada y triangular pero esta vez utilizando el controlador PID, el resultado se muestra en las siguientes imágenes 
+
+ ![SquarePID](https://github.com/alfuc55/Lab2/blob/main/squarePID.png)
+
+ ![TrianglePID](https://github.com/alfuc55/Lab2/blob/main/TrianglePID.png)               
