@@ -4,6 +4,7 @@
 Reporte de la segunda práctica de LRT4012
 
 Aldo FUentes Cruz 16746
+Diego de Jesús Gutiérrez Reyes 165096
 # Introducción
 
 En ROS (Robot Operating System), los "workspaces" son directorios que contienen paquetes de ROS y que han sido configurados para ser compilados.Los workspaces se utilizan principalmente para organizar y compilar los paquetes de ROS que forman parte de un proyecto específico. 
