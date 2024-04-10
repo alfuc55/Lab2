@@ -4,6 +4,7 @@
 Reporte de la segunda práctica de LRT4012
 
 Aldo FUentes Cruz 16746
+
 Diego de Jesús Gutiérrez Reyes 165096
 # Introducción
 
