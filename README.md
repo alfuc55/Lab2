@@ -1,5 +1,5 @@
 # Laboratorio 2 
-## diseno de sistemas roboticos 
+## Diseño de Sistemas Roboticos 
 
 Reporte de la segunda práctica de LRT4012
 
