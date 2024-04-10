@@ -493,3 +493,8 @@ Con el objetivo de probar la funcionalidad del controlador, se realizo de nuevo 
  ![SquarePID](https://github.com/alfuc55/Lab2/blob/main/squarePID.png)
 
  ![TrianglePID](https://github.com/alfuc55/Lab2/blob/main/TrianglePID.png)               
+
+
+ # Conclusiones
+
+ El robot TurtleSim es una herramienta de ROS que permite comprender el funcionamiento de distintas tareas, comandos y configuraciones del software, puesto que al programarle secuencias en los distintos niveles de la práctica, se observa como cada una de estas modifica y mejora el comportamiento del mismo, desde el nivel básico donde se aprende la comunicación enetre nodos y la importancia del envío de mensajes, el nivel medio que requiere que el usuario sea el que envía la infomación, así como la programación de las rutas para implementar un cuadrado y un triángulos, posteriormente el nivel avanzado en el que se emplean los controladores para mejorar el movimiento del turtlesim, los resultados son satisfactorios al cumplir cada uno de lo niveles con los objetivos planteados.
